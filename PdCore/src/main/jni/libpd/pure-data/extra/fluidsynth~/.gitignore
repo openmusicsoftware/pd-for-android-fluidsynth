@@ -1,0 +1,10 @@
+/build
+/libs
+/test
+
+# mac developers
+.DS_Store
+
+# clion users
+
+cmake-build-*/
