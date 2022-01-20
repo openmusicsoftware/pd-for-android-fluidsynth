@@ -138,6 +138,17 @@ PD_EXTRA_FILES := \
     pure-data/extra/sigmund~/sigmund~.c pure-data/extra/stdout/stdout.c \
     pure-data/extra/fluidsynth~/fluidsynth~.c
 
+
+# Build a tickler
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := cpp-tickler
+LOCAL_CPP_INCLUDES := $(PD_CPP_INCLUDES)
+LOCAL_SRC_FILES := pure-data/extra/fluidsynth~/cpptickler.cpp
+include $(BUILD_SHARED_LIBRARY)
+
+
 # Build libpd
 
 include $(CLEAR_VARS)

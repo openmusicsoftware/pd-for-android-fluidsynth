@@ -39,7 +39,7 @@ allprojects {
 }
 
 ext {
-    minSdkVersion = 17
+    minSdkVersion = 24
     compileSdkVersion = 30
     buildToolsVersion = '30.0.2'
     androidxLegacySupportVersion = '1.0.0'
