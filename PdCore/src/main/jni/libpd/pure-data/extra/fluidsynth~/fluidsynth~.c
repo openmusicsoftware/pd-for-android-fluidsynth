@@ -224,7 +224,7 @@ static void fluid_control_change_in(t_fluidsynth_tilde *x,int channel,int ctrlnu
         return;
     }
     // end a sequence
-    if (ctrlnum == 32 && xcnl == channel) {
+    if (ctrlnum == 32 && fsynth_xcnl == channel) {
         int bank = fsynth_bank_ctrl_msb*128 + value;
         fluid_synth_bank_select(x->synth, channel, bank);
         fsynth_xcnl = -1;
