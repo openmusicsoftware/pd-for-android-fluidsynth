@@ -119,46 +119,45 @@ artifacts {
 }
 
 def siteUrl = 'https://github.com/libpd/pd-for-android'
+afterEvaluate {
+    publishing {
+        publishing {
+            publications {
+                // Creates a Maven publication called "release".
+                release(MavenPublication) {
+                    // Applies the component for the release build variant.
+//                from  project(":maplemuse").components.release
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId group
-            artifactId archivesBaseName
-            version version
-            // TODO: include aar artifact from components?
-            artifact "${buildDir}/outputs/aar/${archivesBaseName}.aar"
-            // ossrh requires javadoc and sources
-            artifact sourcesJar
-            artifact javadocJar
+                    // You can then customize attributes of the publication as shown below.
 
-            pom {
-                name = "${project.group}:${project.archivesBaseName}"
-			    description = 'Pure Data for Android'
-                url = siteUrl
-                licenses {
-                    license {
-                        name = 'BSD New'
-                        url = 'https://raw.githubusercontent.com/libpd/pd-for-android/master/PdCore/LICENSE.txt'
-                    }
+                    groupId = 'net.medimuse'
+                    artifactId = 'pdforandroidfluidsynth'
+                    version = '1.0'
+                    artifact bundleReleaseAar
                 }
-                developers {
-                    developer {
-                        id = 'joebowbeer'
-                        name = 'Joe Bowbeer'
-                    }
-                    // TODO: Add all other devs here...
-                }
-                scm {
-                    connection = 'scm:git:https://github.com/libpd/pd-for-android'
-                    developerConnection = 'scm:git:ssh://github.com/libpd/pd-for-android.git'
-                    url = siteUrl
+                // Creates a Maven publication called “debug”.
+                debug(MavenPublication) {
+                    // Applies the component for the debug build variant.
+
+
+                    groupId = 'net.medimuse'
+                    artifactId = 'pdforandroidfluidsynth-debug'
+                    version = '1.0-SNAPSHOT'
+                    artifact bundleDebugAar
                 }
             }
+
+
+            repositories {
+                maven {
+                    url "file://Users/peterslack/development/MEDIMUSE/medimuse-repository"
+                }
+            }
+
         }
+
     }
 }
-
 // configure publishing to a local directory for testing (not necessary)
 // ./gradlew publishMavenPublicationToLocalRepository
 // tree ./PdCore/build/repos
