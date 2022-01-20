@@ -54,7 +54,7 @@ typedef struct _fluidsynth_tilde {
  * we think is apropriate; "apropriate" is how we registered this function
  * in pan_tilde_dsp()
  */
-t_int *fluidsynth_tilde_perform(t_int *w)
+static t_int *fluidsynth_tilde_perform(t_int *w)
 {
     /* the first element is a pointer to the dataspace of this object */
     t_fluidsynth_tilde *x = (t_fluidsynth_tilde *)(w[1]);
@@ -92,7 +92,7 @@ t_int *fluidsynth_tilde_perform(t_int *w)
  * this function gets called whenever the DSP is turned ON
  * the name of this function is registered in pan_tilde_setup()
  */
-void fluidsynth_tilde_dsp(t_fluidsynth_tilde *x, t_signal **sp)
+static void fluidsynth_tilde_dsp(t_fluidsynth_tilde *x, t_signal **sp)
 {
     /* add pan_tilde_perform() to the DSP-tree;
      * the pan_tilde_perform() will expect "4" arguments (packed into an
@@ -109,7 +109,7 @@ void fluidsynth_tilde_dsp(t_fluidsynth_tilde *x, t_signal **sp)
  * this is the "destructor" of the class;
  * it allows us to free dynamically allocated ressources
  */
-void fluidsynth_tilde_free(t_fluidsynth_tilde *x)
+static void fluidsynth_tilde_free(t_fluidsynth_tilde *x)
 {
 
     /* free any ressources associated with the given outlet */
@@ -129,7 +129,7 @@ void fluidsynth_tilde_free(t_fluidsynth_tilde *x)
  * this is the "constructor" of the class
  * the argument is the initial mixing-factor
  */
-void *fluidsynth_tilde_new(void)
+static void *fluidsynth_tilde_new(void)
 {
     t_fluidsynth_tilde *x = (t_fluidsynth_tilde *)pd_new(fluidsynth_tilde_class);
     sys_getsr();
@@ -160,7 +160,7 @@ void *fluidsynth_tilde_new(void)
     return (void *)x;
 }
 
-void fluidsynth_tilde_load_font(t_fluidsynth_tilde *x,t_symbol *sym) {
+static void fluidsynth_tilde_load_font(t_fluidsynth_tilde *x,t_symbol *sym) {
     char buf[MAXPDSTRING];
 
     t_atom at;
@@ -185,7 +185,7 @@ void fluidsynth_tilde_load_font(t_fluidsynth_tilde *x,t_symbol *sym) {
     }
 }
 
-void fluid_note_in(t_fluidsynth_tilde *x,int note,int velocity,int channel) {
+static void fluid_note_in(t_fluidsynth_tilde *x,int note,int velocity,int channel) {
 
     if (x->synth == NULL) {return;}
     if (note < 1 || note > 128) {return;}
@@ -199,7 +199,7 @@ void fluid_note_in(t_fluidsynth_tilde *x,int note,int velocity,int channel) {
     }
 }
 
-void fluid_pgm_change_in(t_fluidsynth_tilde *x,int channel,int pgm) {
+static void fluid_pgm_change_in(t_fluidsynth_tilde *x,int channel,int pgm) {
     if (x->synth == NULL) {return;}
     if (channel < 1 || channel > 16) {return;}
     if (pgm < 1 || pgm >128) {return;}
@@ -209,26 +209,26 @@ void fluid_pgm_change_in(t_fluidsynth_tilde *x,int channel,int pgm) {
 }
 
 
-int bank_ctrl_msb = 0;
-int xcnl = 0;
-
-void fluid_control_change_in(t_fluidsynth_tilde *x,int channel,int ctrlnum,int value) {
+static int fsynth_bank_ctrl_msb = 0;
+static int fsynth_xcnl = 0;
+// todo: fix wonky sequences this will only work with one instance of fluidsynth
+static void fluid_control_change_in(t_fluidsynth_tilde *x,int channel,int ctrlnum,int value) {
     if (x->synth == NULL) {return;}
     if (channel < 1 || channel > 16) {return;}
     if (ctrlnum < 0 || ctrlnum >128) {return;}
 
     // begin a sequence
     if (ctrlnum == 0) {
-        bank_ctrl_msb = value;
-        xcnl = channel;
+        fsynth_bank_ctrl_msb = value;
+        fsynth_xcnl = channel;
         return;
     }
     // end a sequence
     if (ctrlnum == 32 && xcnl == channel) {
-        int bank = bank_ctrl_msb*128 + value;
+        int bank = fsynth_bank_ctrl_msb*128 + value;
         fluid_synth_bank_select(x->synth, channel, bank);
-        xcnl = -1;
-        bank_ctrl_msb = 0;
+        fsynth_xcnl = -1;
+        fsynth_bank_ctrl_msb = 0;
         return;
     }
     
@@ -237,7 +237,7 @@ void fluid_control_change_in(t_fluidsynth_tilde *x,int channel,int ctrlnum,int v
     post("control change chnl : %i  num : %i val : %i",channel,ctrlnum,value);
 }
 
-void fluidsynth_tilde_note_in(t_fluidsynth_tilde *x,t_symbol *sym,t_int argc, t_atom *argv){
+static void fluidsynth_tilde_note_in(t_fluidsynth_tilde *x,t_symbol *sym,t_int argc, t_atom *argv){
 switch(argc){
         //lists must have 3 ints
     case 3:
@@ -250,7 +250,7 @@ switch(argc){
     }
 }
 
-void fluidsynth_tilde_pgm_change_in(t_fluidsynth_tilde *x,t_symbol *sym,t_int argc, t_atom *argv){
+static void fluidsynth_tilde_pgm_change_in(t_fluidsynth_tilde *x,t_symbol *sym,t_int argc, t_atom *argv){
 switch(argc){
         //lists must have 2 ints
     case 2:
@@ -263,7 +263,7 @@ switch(argc){
     }
 }
 
-void fluidsynth_tilde_control_change_in(t_fluidsynth_tilde *x,t_symbol *sym,t_int argc, t_atom *argv){
+static void fluidsynth_tilde_control_change_in(t_fluidsynth_tilde *x,t_symbol *sym,t_int argc, t_atom *argv){
 switch(argc){
         //lists must have 2 ints
     case 3:
