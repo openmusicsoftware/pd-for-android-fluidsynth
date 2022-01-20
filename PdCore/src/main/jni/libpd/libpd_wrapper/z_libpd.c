@@ -51,6 +51,7 @@ int sys_pollgui(void);
   void pique_setup(void);
   void sigmund_tilde_setup(void);
   void stdout_setup(void);
+  void fluidsynth_tilde_setup(void);
 #endif
 
 static PERTHREAD t_atom *s_argv = NULL;
@@ -102,6 +103,7 @@ int libpd_init(void) {
   pique_setup();
   sigmund_tilde_setup();
   stdout_setup();
+  fluidsynth_tilde_setup();
 #endif
 #ifndef LIBPD_NO_NUMERIC
   setlocale(LC_NUMERIC, "C");
