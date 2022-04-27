@@ -193,9 +193,9 @@ static void fluid_note_in(t_fluidsynth_tilde *x,int note,int velocity,int channe
     if (channel < 1 || channel > 16) {return;}
 
     if (velocity != 0) {
-        fluid_synth_noteon(x->synth, channel, note, velocity);
+        fluid_synth_noteon(x->synth, channel-1, note, velocity);
     } else {
-        fluid_synth_noteoff(x->synth, channel, note);
+        fluid_synth_noteoff(x->synth, channel-1, note);
     }
 }
 
@@ -204,7 +204,7 @@ static void fluid_pgm_change_in(t_fluidsynth_tilde *x,int channel,int pgm) {
     if (channel < 1 || channel > 16) {return;}
     if (pgm < 1 || pgm >128) {return;}
 
-    fluid_synth_program_change(x->synth, channel, pgm);
+    fluid_synth_program_change(x->synth, channel-1, pgm-1);
     post("pgm change chnl : %i  pgm : %i",channel,pgm);
 }
 
@@ -226,13 +226,13 @@ static void fluid_control_change_in(t_fluidsynth_tilde *x,int channel,int ctrlnu
     // end a sequence
     if (ctrlnum == 32 && fsynth_xcnl == channel) {
         int bank = fsynth_bank_ctrl_msb*128 + value;
-        fluid_synth_bank_select(x->synth, channel, bank);
+        fluid_synth_bank_select(x->synth, channel-1, bank);
         fsynth_xcnl = -1;
         fsynth_bank_ctrl_msb = 0;
         return;
     }
     
-    fluid_synth_cc(x->synth, channel, ctrlnum, value);
+    fluid_synth_cc(x->synth, channel-1, ctrlnum, value);
     
     post("control change chnl : %i  num : %i val : %i",channel,ctrlnum,value);
 }

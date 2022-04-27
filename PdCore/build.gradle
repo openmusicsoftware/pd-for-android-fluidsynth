@@ -132,7 +132,7 @@ afterEvaluate {
 
                     groupId = 'net.medimuse'
                     artifactId = 'pdforandroidfluidsynth'
-                    version = '1.0'
+                    version = '1.2.2'
                     artifact bundleReleaseAar
                 }
                 // Creates a Maven publication called “debug”.
@@ -142,7 +142,7 @@ afterEvaluate {
 
                     groupId = 'net.medimuse'
                     artifactId = 'pdforandroidfluidsynth-debug'
-                    version = '1.0-SNAPSHOT'
+                    version = '1.2.2-SNAPSHOT'
                     artifact bundleDebugAar
                 }
             }
